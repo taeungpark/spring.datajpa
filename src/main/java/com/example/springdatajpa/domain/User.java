@@ -8,17 +8,19 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="user3")
+@Table(name="user")
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
+//@ToString
 public class User {
     @Id
     @Column(name="user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // userId will be created automatically
     private Integer userId;
 
     @Column(length = 255)
@@ -32,4 +34,22 @@ public class User {
 
     @CreationTimestamp
     private LocalDateTime regdate;
+
+    @ManyToMany
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    Set<Role> roles = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", regdate=" + regdate +
+                '}';
+    }
 }
